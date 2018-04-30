@@ -1,0 +1,6 @@
+<ion-content padding>
+  <div style="border: solid 1px #dddddd; padding: 10px; margin-bottom: 20px;">{{(currentDashboard$ | async)?.name}}</div>
+  <div style="border: solid 1px #dddddd; padding: 10px; margin-bottom: 5px;" *ngFor="let dashboardVisualization of currentDashboardVisualizations$ | async">
+    <app-visualization-card [id]="dashboardVisualization"></app-visualization-card>
+  </div>
+</ion-content>
