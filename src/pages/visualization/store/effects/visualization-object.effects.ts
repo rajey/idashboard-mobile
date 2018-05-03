@@ -14,7 +14,7 @@ import { Visualization } from '../../models/visualization.model';
 import { FavoriteService } from '../../services/favorite.service';
 import { of } from 'rxjs/observable/of';
 import { getSelectionDimensionsFromFavorite } from '../../helpers/get-selectiion-dimensions-from-favorite.helper';
-import { AddVisualizationLayerAction } from '../actions/visualization-layer.actions';
+import { AddVisualizationLayerAction, LoadVisualizationAnalyticsAction } from '../actions/visualization-layer.actions';
 import { VisualizationLayer } from '../../models/visualization-layer.model';
 
 @Injectable()
@@ -64,8 +64,9 @@ export class VisualizationObjectEffects {
               id: favoriteLayer.id,
               dataSelections: getSelectionDimensionsFromFavorite(favoriteLayer),
               layerType: favoriteLayer.layer || 'THEMATIC',
+              isAggregate: true,
               analytics: null,
-              config: _.omit(favoriteLayer, ['rows', 'columns', 'filters'])
+              config: _.omit(favoriteLayer, ['id', 'rows', 'columns', 'filters'])
             };
           });
 
@@ -84,6 +85,9 @@ export class VisualizationObjectEffects {
             message: 'Favorite information has been loaded'
           }
         }));
+
+        //Load analytics for visualization layers
+        this.store.dispatch(new LoadVisualizationAnalyticsAction(action.id, visualizationLayers));
       }
     }));
 }

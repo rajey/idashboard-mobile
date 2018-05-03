@@ -15,6 +15,8 @@ export function visualizationLayerReducer(state: VisualizationLayerState = initi
   switch (action.type) {
     case VisualizationLayerActionTypes.ADD_VISUALIZATION_LAYER:
       return visualizationLayerAdapter.addOne(action.visualizationLayer, state);
+    case VisualizationLayerActionTypes.LOAD_VISUALIZATION_ANALYTICS_SUCCESS:
+      return visualizationLayerAdapter.updateOne({id: action.id, changes: action.changes}, state);
   }
   return state;
 }

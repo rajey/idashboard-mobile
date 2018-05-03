@@ -13,8 +13,7 @@ export enum VisualizationObjectActionTypes {
 export class AddAllVisualizationObjectsAction implements Action {
   readonly type = VisualizationObjectActionTypes.ADD_ALL_VISUALIZATION_OBJECTS;
 
-  constructor(public visualizationObjects: Visualization[]) {
-  }
+  constructor(public visualizationObjects: Visualization[]) {}
 }
 
 export class InitializeVisualizationObjectAction implements Action {
