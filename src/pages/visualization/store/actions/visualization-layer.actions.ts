@@ -25,7 +25,7 @@ export class LoadVisualizationAnalyticsAction implements Action {
 export class LoadVisualizationAnalyticsSuccessAction implements Action {
   readonly type = VisualizationLayerActionTypes.LOAD_VISUALIZATION_ANALYTICS_SUCCESS;
 
-  constructor(public id: string, public change: Partial<VisualizationLayer>) {
+  constructor(public id: string, public changes: Partial<VisualizationLayer>) {
   }
 }
 

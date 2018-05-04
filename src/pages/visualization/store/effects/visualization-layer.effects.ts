@@ -24,7 +24,6 @@ export class VisualizationLayerEffects {
       forkJoin(_.map(action.visualizationLayers,
         visualizationLayer => this.analyticsService.getAnalytics(visualizationLayer.dataSelections,
           visualizationLayer.isAggregate, visualizationLayer.config))).subscribe((analyticsResponse) => {
-
         // Save visualizations layers
         _.each(analyticsResponse, (analytics, analyticsIndex) => {
           this.store.dispatch(

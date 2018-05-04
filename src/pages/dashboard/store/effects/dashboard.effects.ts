@@ -10,8 +10,11 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { DashboardService } from '../../services/dashboard.service';
 import { of } from 'rxjs/observable/of';
 import { AppState } from '../../../../app/store/reducers';
-import { getStandardizedVisualizationObjects, AddAllVisualizationObjectsAction } from '../../../visualization';
 import { AddAllDashboardVisualizationAction } from '../actions/dashboard-visualization.actions';
+import { getStandardizedVisualizationObject } from '../../../visualization';
+import { AddAllVisualizationObjectsAction } from '../../../visualization/store/actions/visualization-object.actions';
+import { AddAllVisualizationUiConfigurationsAction } from '../../../visualization/store/actions/visualization-ui-configuration.actions';
+import { getStandardizedVisualizationUiConfig } from '../../../visualization/helpers/get-standardized-visualization-ui-config.helper';
 
 @Injectable()
 export class DashboardEffects {
@@ -50,7 +53,8 @@ export class DashboardEffects {
           };
         })));
       if (dashboardItems.length > 0) {
-        this.store.dispatch(new AddAllVisualizationObjectsAction(getStandardizedVisualizationObjects(dashboardItems)));
+        this.store.dispatch(new AddAllVisualizationObjectsAction(_.map(dashboardItems, dashboardItem => getStandardizedVisualizationObject(dashboardItem))));
+        this.store.dispatch(new AddAllVisualizationUiConfigurationsAction(_.map(dashboardItems, dashboardItem => getStandardizedVisualizationUiConfig(dashboardItem))))
       }
     }));
 }

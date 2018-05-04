@@ -33,14 +33,14 @@ export class UpdateVisualizationObjectAction implements Action {
 export class LoadVisualizationFavoriteAction implements Action {
   readonly type = VisualizationObjectActionTypes.LOAD_VISUALIZATION_FAVORITE;
 
-  constructor( public id: string, public favorite: {id: string, type: string}) {
+  constructor( public visualization: Visualization) {
   }
 }
 
 export class LoadVisualizationFavoriteSuccessAction implements Action {
   readonly type = VisualizationObjectActionTypes.LOAD_VISUALIZATION_FAVORITE_SUCCESS;
 
-  constructor(public id: string, public favorite: any) {
+  constructor(public visualization: Visualization, public favorite: any) {
   }
 }
 

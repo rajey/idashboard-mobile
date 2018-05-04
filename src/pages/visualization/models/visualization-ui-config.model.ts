@@ -1,4 +1,5 @@
 export interface VisualizationUiConfig {
+  id: string;
   shape: string;
   hideBorder?: boolean;
   hideHeader?: boolean;

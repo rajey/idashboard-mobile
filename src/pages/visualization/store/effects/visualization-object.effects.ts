@@ -13,9 +13,10 @@ import { VisualizationState, getVisualizationObjectEntities } from '../reducers'
 import { Visualization } from '../../models/visualization.model';
 import { FavoriteService } from '../../services/favorite.service';
 import { of } from 'rxjs/observable/of';
-import { getSelectionDimensionsFromFavorite } from '../../helpers/get-selectiion-dimensions-from-favorite.helper';
+import { getSelectionDimensionsFromFavorite } from '../../helpers/get-selection-dimensions-from-favorite.helper';
 import { AddVisualizationLayerAction, LoadVisualizationAnalyticsAction } from '../actions/visualization-layer.actions';
 import { VisualizationLayer } from '../../models/visualization-layer.model';
+import { AddVisualizationConfigurationAction } from '../actions/visualization-configuration.actions';
 
 @Injectable()
 export class VisualizationObjectEffects {
@@ -41,23 +42,36 @@ export class VisualizationObjectEffects {
           }));
 
           //Load favorite information
-          if (visualizationObject.favorite && visualizationObject.uiConfig && visualizationObject.uiConfig.showBody) {
+          if (visualizationObject.favorite) {
             this.store.dispatch(
-              new LoadVisualizationFavoriteAction(visualizationObject.id, visualizationObject.favorite));
+              new LoadVisualizationFavoriteAction(visualizationObject));
           }
         }
       }));
 
   @Effect() loadFavorite$ = this.actions$.ofType(VisualizationObjectActionTypes.LOAD_VISUALIZATION_FAVORITE).pipe(
-    mergeMap((action: LoadVisualizationFavoriteAction) => this.favoriteService.getFavorite(action.favorite).
-      pipe(map((favorite: any) => new LoadVisualizationFavoriteSuccessAction(action.id, favorite)),
-        catchError((error) => of(new LoadVisualizationFavoriteFailAction(action.id, error))))));
+    mergeMap(
+      (action: LoadVisualizationFavoriteAction) => this.favoriteService.getFavorite(action.visualization.favorite).
+        pipe(map((favorite: any) => new LoadVisualizationFavoriteSuccessAction(action.visualization, favorite)),
+          catchError((error) => of(new LoadVisualizationFavoriteFailAction(action.visualization.id, error))))));
 
   @Effect({dispatch: false}) loadFavoriteSuccess$ = this.actions$.ofType(
     VisualizationObjectActionTypes.LOAD_VISUALIZATION_FAVORITE_SUCCESS).
     pipe(tap((action: LoadVisualizationFavoriteSuccessAction) => {
 
       if (action.favorite) {
+        // prepare global visualization configurations
+        this.store.dispatch(new AddVisualizationConfigurationAction(
+          {
+            id: action.visualization.visualizationConfigId,
+            currentType: action.visualization.type,
+            basemap: action.favorite.basemap,
+            zoom: action.favorite.zoom,
+            latitude: action.favorite.latitude,
+            longitude: action.favorite.longitude,
+          }));
+
+        // generate visualization layers
         const visualizationLayers: VisualizationLayer[] = _.map(action.favorite.mapViews || [action.favorite],
           (favoriteLayer: any) => {
             return {
@@ -76,7 +90,7 @@ export class VisualizationObjectEffects {
         });
 
         // Update visualization object
-        this.store.dispatch(new UpdateVisualizationObjectAction(action.id, {
+        this.store.dispatch(new UpdateVisualizationObjectAction(action.visualization.id, {
           layers: _.map(visualizationLayers, visualizationLayer => visualizationLayer.id),
           progress: {
             statusCode: 200,
@@ -87,7 +101,7 @@ export class VisualizationObjectEffects {
         }));
 
         //Load analytics for visualization layers
-        this.store.dispatch(new LoadVisualizationAnalyticsAction(action.id, visualizationLayers));
+        this.store.dispatch(new LoadVisualizationAnalyticsAction(action.visualization.id, visualizationLayers));
       }
     }));
 }
