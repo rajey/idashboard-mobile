@@ -9,8 +9,10 @@ export class AnalyticsService {
   constructor(private http: HttpClientService) {
   }
 
-  getAnalytics(dataSelections: VisualizationDataSelection[], isAggregate: boolean, config?: any) {
-    const analyticsUrl = getAnalyticsUrl(dataSelections, isAggregate);
+  getAnalytics(dataSelections: VisualizationDataSelection[], layerType: string, config?: any) {
+    const analyticsUrl = (layerType === 'thematic' || layerType === 'event') ?
+                         getAnalyticsUrl(dataSelections, layerType, config) :
+                         '';
     return analyticsUrl !== '' ? this.http.get(analyticsUrl) : of(null);
 
   }

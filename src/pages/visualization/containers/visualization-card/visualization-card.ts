@@ -13,7 +13,6 @@ import { VisualizationUiConfig } from '../../models/visualization-ui-config.mode
 import { getCurrentVisualizationObjectLayers } from '../../store/selectors/visualization-layer.selectors';
 import { getCurrentVisualizationUiConfig } from '../../store/selectors/visualization-ui-configuration.selectors';
 import { Subject } from 'rxjs/Subject';
-import { filter } from 'rxjs/operators';
 import { VisualizationInputs } from '../../models/visualization-inputs.model';
 import { VisualizationProgress } from '../../models/visualization-progress.model';
 import { VisualizationConfig } from '../../models/visualization-config.model';
@@ -42,6 +41,7 @@ export class VisualizationCard implements OnInit, OnChanges, AfterViewInit {
         if (visualizationInputs) {
           // initialize visualization object
           this.store.dispatch(new InitializeVisualizationObjectAction(visualizationInputs.id));
+
           // Get selectors
           this.visualizationObject$ = this.store.select(getVisualizationObjectById(visualizationInputs.id));
           this.visualizationLayers$ = this.store.select(getCurrentVisualizationObjectLayers(visualizationInputs.id));

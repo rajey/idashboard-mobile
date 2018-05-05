@@ -17,6 +17,7 @@ import { getSelectionDimensionsFromFavorite } from '../../helpers/get-selection-
 import { AddVisualizationLayerAction, LoadVisualizationAnalyticsAction } from '../actions/visualization-layer.actions';
 import { VisualizationLayer } from '../../models/visualization-layer.model';
 import { AddVisualizationConfigurationAction } from '../actions/visualization-configuration.actions';
+import { getVisualizationLayerType } from '../../helpers/get-visualization-layer-type.helper';
 
 @Injectable()
 export class VisualizationObjectEffects {
@@ -77,8 +78,7 @@ export class VisualizationObjectEffects {
             return {
               id: favoriteLayer.id,
               dataSelections: getSelectionDimensionsFromFavorite(favoriteLayer),
-              layerType: favoriteLayer.layer || 'THEMATIC',
-              isAggregate: true,
+              layerType: getVisualizationLayerType(action.visualization.favorite.type, favoriteLayer),
               analytics: null,
               config: _.omit(favoriteLayer, ['id', 'rows', 'columns', 'filters'])
             };

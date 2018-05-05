@@ -6,6 +6,5 @@ export interface VisualizationLayer {
   analytics: Analytics;
   dataSelections?: VisualizationDataSelection[];
   layerType?: string;
-  isAggregate: boolean;
   config?: {[name: string]: any};
 }
