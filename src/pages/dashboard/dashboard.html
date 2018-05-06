@@ -1,6 +1,14 @@
 <ion-content padding>
-  <div style="border: solid 1px #dddddd; padding: 10px; margin-bottom: 20px;">{{(currentDashboard$ | async)?.name}}</div>
-  <div style="border: solid 1px #dddddd; padding: 10px; margin-bottom: 5px;" *ngFor="let dashboardVisualization of currentDashboardVisualizations$ | async">
-    <app-visualization-card [id]="dashboardVisualization"></app-visualization-card>
+  <!--header section-->
+  <div class="selected-dashboard-block" (tap)="openDashboardListFilter()">
+    <ion-row>
+      <ion-col col-11>
+        {{(currentDashboard$ | async)?.name}}
+      </ion-col>
+      <ion-col col-1>
+        <ion-icon ios="ios-list" md="md-list"></ion-icon>
+      </ion-col>
+    </ion-row>
   </div>
+  <!--end of header section-->
 </ion-content>
